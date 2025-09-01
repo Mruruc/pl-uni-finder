@@ -1,4 +1,5 @@
 # Environment-specific configs
+docker/.env
 *-dev.yaml
 **/*-dev.yaml
 application-dev.yaml

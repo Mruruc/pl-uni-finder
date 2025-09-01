@@ -5,6 +5,8 @@ FROM eclipse-temurin:21-jdk AS build
 
 # Make the build deterministic and cache-friendly
 ARG SERVICE_DIR
+ARG SERVICE_VERSION                
+ENV SERVICE_VERSION=$SERVICE_VERSION 
 WORKDIR /workspace
 
 # Copy only Gradle wrapper & build files first (better layer caching)
@@ -22,6 +24,8 @@ COPY ${SERVICE_DIR}/ ./
 # Use BuildKit cache for Gradle (fast subsequent builds)
 RUN --mount=type=cache,target=/root/.gradle \
     ./gradlew --no-daemon clean bootJar
+
+RUN echo "SERVICE_VERSION=$SERVICE_VERSION"
 
 # Collect the jar to a known location
 RUN JAR="$(ls -1 build/libs/*.jar | head -n1)" \
