@@ -6,11 +6,13 @@ on:
     paths:
       - "fu-search-service/**"
       - ".github/workflows/ci-fu-search.yml"
+      - "VERSION_BASE"
   pull_request:
     branches: [master]
     paths:
       - "fu-search-service/**"
       - ".github/workflows/ci-fu-search.yml"
+      - "VERSION_BASE"
 
 jobs:
   build:
