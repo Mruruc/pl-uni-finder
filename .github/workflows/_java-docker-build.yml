@@ -65,8 +65,7 @@ jobs:
       - name: Gradle build
         working-directory: ${{ env.SERVICE_DIR }}
         shell: bash
-        run: chmod +x gradlew && \
-            ./gradlew --no-daemon clean build -x test printVersion
+        run: chmod +x gradlew && ./gradlew --no-daemon clean build -x test printVersion
       
        # -------------------
        # DOCKER BUILD & PUSH
