@@ -5,12 +5,12 @@ on:
     branches: [master]
     paths:
       - "fu-university-service/**"
-      - "docker/Dockerfile"
+      - ".github/workflows/ci-fu-university-service.yml"
   pull_request:
     branches: [master]
     paths:
       - "fu-university-service/**"
-      - "docker/Dockerfile"
+      - ".github/workflows/ci-fu-university-service.yml"
 
 jobs:
   build:

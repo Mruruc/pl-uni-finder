@@ -5,12 +5,12 @@ on:
     branches: [master]
     paths:
       - "fu-search-service/**"
-      - "docker/Dockerfile"
+      - ".github/workflows/ci-fu-search.yml"
   pull_request:
     branches: [master]
     paths:
       - "fu-search-service/**"
-      - "docker/Dockerfile"
+      - ".github/workflows/ci-fu-search.yml"
 
 jobs:
   build:
