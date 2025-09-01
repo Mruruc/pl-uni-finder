@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: University Service
+  profiles:
+    active: dev
+  datasource:
+    url: ${database.url}
+    username: ${database.user}
+    password: ${database.password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: ${jpa.show-sql}
+    database: postgresql
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    url: ${database.url}
+    user: ${database.user}
+    password: ${database.password}
+    locations: classpath:db/migration
+
+
+server:
+  servlet:
+    context-path: /api/v1
+
+

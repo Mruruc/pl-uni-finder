@@ -1,0 +1,47 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Root stuff not needed in images
+README.md
+docker/
+docker-compose*.yaml
+
+# Java / Gradle
+**/.gradle
+**/build/
+**/out/
+**/bin/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Logs
+**/*.log
+**/logs/
+
+# IDE / Editor
+**/.idea
+**/.vscode
+**/*.iml
+**/*.ipr
+**/*.iws
+**/.project
+**/.classpath
+**/.settings/
+**/.sts4-cache
+
+# Node / React
+**/node_modules/
+**/.npm
+**/.yarn
+**/build/
+**/dist/
+**/.env.local
+**/.env.development
+**/.env.test
+**/.env.production
+
+# OS / Misc
+.DS_Store
+Thumbs.db

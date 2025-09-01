@@ -1,0 +1,4 @@
+# Ensure consistent line endings for Gradle wrapper in all services
+**/gradlew text eol=lf
+**/*.bat text eol=crlf
+**/*.jar binary

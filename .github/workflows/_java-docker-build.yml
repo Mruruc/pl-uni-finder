@@ -1,0 +1,107 @@
+name: Reusable Workflow for building Docker images based on Java
+
+on:
+  workflow_call:
+    inputs:
+      service_dir:
+        description: Path of the service directory (e.g. fu-search-service)
+        required: true
+        type: string
+      dockerfile:
+        description: Dockerfile path (e.g. docker/Dockerfile.fu-search-service)
+        required: true
+        type: string
+      image_name:
+        description: Full image name (e.g. USER/fu-search-service)
+        required: true
+        type: string
+      java_version:
+        description: JDK version
+        required: false
+        default: "21"
+        type: string
+
+jobs:
+  build_and_publish:
+    name: Build & (conditionally) push Docker image
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    env:
+      IMAGE_NAME: ${{ inputs.image_name }}
+      DOCKERFILE: ${{ inputs.dockerfile }}
+      SERVICE_DIR: ${{ inputs.service_dir }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Fast fail before Docker, with Gradle cache
+      - name: Set up Java ${{ inputs.java_version }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java_version }}
+          cache: gradle
+
+      - name: Gradle build (skip tests on push, run on PR)
+        working-directory: ${{ env.SERVICE_DIR }}
+        shell: bash
+        run: ./gradlew --no-daemon clean build -x test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      # PRs: build only (no push)
+      - name: Build (no push on PR)
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            SERVICE_DIR=${{ env.SERVICE_DIR }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # Push on branch pushes (e.g., master)
+      - name: Build & Push
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
+          build-args: |
+            SERVICE_DIR=${{ env.SERVICE_DIR }}

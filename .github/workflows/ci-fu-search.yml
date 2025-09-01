@@ -1,0 +1,24 @@
+name: CI - fu-search-service
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "fu-search-service/**"
+      - "docker/Dockerfile.fu-search-service"
+  pull_request:
+    branches: [master]
+    paths:
+      - "fu-search-service/**"
+      - "docker/Dockerfile.fu-search-service"
+
+jobs:
+  build:
+    name: Build & publish fu-search-service
+    uses: ./.github/workflows/_java-docker-build.yml
+    secrets: inherit
+    with:
+      service_dir: fu-search-service
+      dockerfile: docker/Dockerfile
+      image_name: ${{ secrets.DOCKERHUB_USERNAME }}/fu-search-service
+      java_version: "21"

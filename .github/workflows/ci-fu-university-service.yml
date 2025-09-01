@@ -1,0 +1,24 @@
+name: CI - fu-university-service
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "fu-university-service/**"
+      - "docker/Dockerfile"
+  pull_request:
+    branches: [master]
+    paths:
+      - "fu-university-service/**"
+      - "docker/Dockerfile"
+
+jobs:
+  build:
+    name: Build & publish fu-university-service
+    uses: ./.github/workflows/_java-docker-build.yml
+    secrets: inherit
+    with:
+      service_dir: fu-university-service
+      dockerfile: docker/Dockerfile
+      image_name: ${{ secrets.DOCKERHUB_USERNAME }}/fu-university-service
+      java_version: "21"

@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: fu-sync-service
+
+  datasource:
+    url: ${database.url}
+    username: ${database.user}
+    password: ${database.password}
+    driver-class-name: org.postgresql.Driver
