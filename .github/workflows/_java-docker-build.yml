@@ -47,7 +47,7 @@ jobs:
       - name: Gradle build (skip tests on push, run on PR)
         working-directory: ${{ env.SERVICE_DIR }}
         shell: bash
-        run: ./gradlew --no-daemon clean build -x test
+        run: chmod +x gradlew && ./gradlew --no-daemon clean build -x test
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
