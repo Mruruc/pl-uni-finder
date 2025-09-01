@@ -5,12 +5,12 @@ on:
     branches: [master]
     paths:
       - "fu-search-service/**"
-      - "docker/Dockerfile.fu-search-service"
+      - "docker/Dockerfile"
   pull_request:
     branches: [master]
     paths:
       - "fu-search-service/**"
-      - "docker/Dockerfile.fu-search-service"
+      - "docker/Dockerfile"
 
 jobs:
   build:
@@ -19,6 +19,5 @@ jobs:
     secrets: inherit
     with:
       service_dir: fu-search-service
-      dockerfile: docker/Dockerfile
-      image_name: ${{ secrets.DOCKERHUB_USERNAME }}/fu-search-service
+      image_name_suffix: fu-search-service
       java_version: "21"

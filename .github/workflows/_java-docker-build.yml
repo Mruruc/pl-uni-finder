@@ -7,12 +7,8 @@ on:
         description: Path of the service directory (e.g. fu-search-service)
         required: true
         type: string
-      dockerfile:
-        description: Dockerfile path (e.g. docker/Dockerfile.fu-search-service)
-        required: true
-        type: string
-      image_name:
-        description: Full image name (e.g. USER/fu-search-service)
+      image_name_suffix:
+        description: Suffix for image name (e.g. fu-search-service)
         required: true
         type: string
       java_version:
@@ -30,8 +26,8 @@ jobs:
       contents: read
 
     env:
-      IMAGE_NAME: ${{ inputs.image_name }}
-      DOCKERFILE: ${{ inputs.dockerfile }}
+      IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image_name_suffix }}
+      DOCKERFILE: docker/Dockerfile
       SERVICE_DIR: ${{ inputs.service_dir }}
 
     steps:
