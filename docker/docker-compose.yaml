@@ -1,13 +1,13 @@
 services:
   fu-search:
     image: ${DOCKERHUB_USERNAME}/fu-search-service:${TAG:-latest}
-    container_name: fu-search
-    ports: ["8081:8080"]
-    env_file: [".env"]
+    container_name: fu-search-service
+    ports: [ "8081:8080" ]
+    env_file: [ ".env" ]
     restart: unless-stopped
     read_only: true
-    tmpfs: ["/tmp"]
-    security_opt: [no-new-privileges:true]
+    tmpfs: [ "/tmp" ]
+    security_opt: [ no-new-privileges:true ]
     user: "10001:10001"
     mem_limit: 512m
     cpus: "0.50"
@@ -16,24 +16,24 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    networks: [app-net]
+    networks: [ app-net ]
 
   fu-sync:
     image: ${DOCKERHUB_USERNAME}/fu-university-service:${TAG:-latest}
-    container_name: fu-sync
-    ports: ["8082:8080"]
-    env_file: [".env"]
+    container_name: fu-university-service
+    ports: [ "8082:8080" ]
+    env_file: [ ".env" ]
     restart: unless-stopped
     read_only: true
-    tmpfs: ["/tmp"]
-    security_opt: ["no-new-privileges:true"]
+    tmpfs: [ "/tmp" ]
+    security_opt: [ "no-new-privileges:true" ]
     user: "10001:10001"
     mem_limit: 512m
     cpus: "0.50"
     logging:
       driver: json-file
       options: { max-size: "10m", max-file: "3" }
-    networks: [app-net]
+    networks: [ app-net ]
 
 networks:
   app-net:

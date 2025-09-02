@@ -1,0 +1,25 @@
+name: CI - fu-sync-service
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "fu-sync-service/**"
+      - ".github/workflows/ci-fu-sync-service.yml"
+      - "VERSION_BASE"
+  pull_request:
+    branches: [master]
+    paths:
+      - "fu-sync-service/**"
+      - ".github/workflows/ci-fu-sync-service.yml"
+      - "VERSION_BASE"
+
+jobs:
+  build:
+    name: Build & publish fu-sync-service
+    uses: ./.github/workflows/_java-docker-build.yml
+    secrets: inherit
+    with:
+      service_dir: fu-sync-service
+      image_name_suffix: fu-sync-service
+      java_version: "21"

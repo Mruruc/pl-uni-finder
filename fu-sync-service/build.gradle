@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.mr.uruc.fu'
-version = '1.0.0'
+version = System.getenv('SERVICE_VERSION') ?: '1.0.0'
 description = 'fu-sync-service'
 
 java {
@@ -32,4 +32,10 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.register('printVersion') {
+    doLast {
+        println "Effective project.version = ${project.version}"
+    }
 }

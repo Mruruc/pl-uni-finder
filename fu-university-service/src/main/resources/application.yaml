@@ -1,8 +1,6 @@
 spring:
   application:
     name: University Service
-  profiles:
-    active: dev
   datasource:
     url: ${database.url}
     username: ${database.user}

@@ -42,16 +42,24 @@ public class ProgramRepository {
             SELECT
                 p.id, p.name, p.description, p.level, p.duration, p.language,
                 p.tuition, p.rating, p.students_count, p.next_deadline, p.is_active,
-                u.id AS university_id, u.name  AS university_name, u.city,
-                (SELECT STRING_AGG(DISTINCT t.name, '|') FROM program_tags pt
-                    JOIN tags t ON t.id = pt.tag_id WHERE pt.program_id = p.id) AS tags,
-                (SELECT STRING_AGG(rq.description, '|') FROM requirements rq
-                    WHERE rq.program_id = p.id) AS requirements
+                u.id AS university_id, u.name AS university_name, u.city,
+                (
+                    SELECT STRING_AGG(DISTINCT t.name, '|')
+                    FROM program_tags pt
+                    JOIN tags t ON t.id = pt.tag_id
+                    WHERE pt.program_id = p.id
+                ) AS tags,
+                (
+                    SELECT STRING_AGG(DISTINCT r.description, '|')
+                    FROM program_requirements pr
+                    JOIN requirements r ON r.id = pr.requirement_id
+                    WHERE pr.program_id = p.id
+                ) AS requirements
             FROM programs p
             LEFT JOIN universities u ON u.id = p.university_id
             ORDER BY p.id
-            LIMIT :limit 
-            OFFSET :offset;
+            LIMIT :limit
+            OFFSET :offset
             """;
 
     public static final String COUNT_QUERY = "SELECT COUNT(id) FROM programs";

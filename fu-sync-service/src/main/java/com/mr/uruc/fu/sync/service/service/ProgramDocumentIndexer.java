@@ -28,7 +28,6 @@ public class ProgramDocumentIndexer {
 
         try {
             var result = documentService.bulkIndex(PROGRAMS_COLLECTION, programs);
-            documentService.bulkIndex(PROGRAMS_COLLECTION, programs);
             log.info("Successfully synced {} of {} programs to collection '{}'.",
                     result.succeeded(), result.total(), PROGRAMS_COLLECTION);
         } catch (Exception exception) {

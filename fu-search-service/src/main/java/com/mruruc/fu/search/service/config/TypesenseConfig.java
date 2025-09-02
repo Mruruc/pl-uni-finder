@@ -26,7 +26,7 @@ public class TypesenseConfig {
     public Client typesenseClient() {
         log.info("Initializing Typesense client with host: {}, port: {}, protocol: {}, apiKey: {}, connectionTimeout: {}",
                 host, port, protocol,
-                apiKey == null ? "*****************" : "null",
+                apiKey != null ? "*****************" : "null",
                 connectionTimeout);
         var nodes = List.of(new Node(protocol, host, port));
         var config = new org.typesense.api.Configuration(nodes, connectionTimeout, apiKey);
