@@ -17,9 +17,6 @@ const CompactSearchBar = ({
 }: CompactSearchBarProps) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  const handleSearchSuggestionSelect = (suggestion: string) => {
-    onSearchSubmit();
-  };
 
   return (
     <div className="flex-1 max-w-2xl mx-6">

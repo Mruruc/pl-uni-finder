@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useLocation, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import CompactSearchBar from "../components/common/CompactSearchBar.tsx";
 import Header from "../components/common/Header.tsx";
 import LoadingState from "../components/common/LoadingState.tsx";
@@ -65,7 +65,14 @@ const ProgramsSearchResultsPage = () => {
     const q = query.trim();
     if (!q) return;
     const current = searchParams.get("q") || "";
-    if (q !== current) setSearchParams({ q }); 
+    if (q !== current) setSearchParams({ q });
+  };
+
+  const handleClearSearch = (reset: boolean) => {
+    console.log(reset);
+
+    setSearchParams({ q: "" });
+    dispatch(clearSearchQuery());
   };
 
   return (
