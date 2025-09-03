@@ -19,8 +19,9 @@ public class SearchUtil {
 
 
     public static SearchParameters buildSearchParameters(ProgramSearchRequest request) {
+        var query = request.query().strip().equals("all") ? DEFAULT_QUERY : request.query().strip();
         return new SearchParameters()
-                .q(request.query().isBlank() ? DEFAULT_QUERY : request.query())
+                .q(query)
                 .queryBy(QUERY_BY_FIELDS)
                 .page(request.page())
                 .perPage(request.perPage());
