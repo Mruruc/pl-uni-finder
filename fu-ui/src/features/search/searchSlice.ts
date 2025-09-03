@@ -32,18 +32,26 @@ export const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    // action set the active filters
+    setFilter: <K extends keyof SearchFilters>(
+      state: SearchState,
+      action: PayloadAction<{ key: K; value: SearchFilters[K] }>
+    ) => {
+      state.activeFilters[action.payload.key] = action.payload.value as any;
+    },
+    patchActiveFilters: (
+      state,
+      action: PayloadAction<Partial<SearchFilters>>
+    ) => {
+      state.activeFilters = { ...state.activeFilters, ...action.payload };
+    },
     setActiveFilters: (state, action: PayloadAction<SearchFilters>) => {
       state.activeFilters = action.payload;
     },
-    // clear active filters
     clearActiveFilters: (state) => {
       state.activeFilters = initialState.activeFilters;
     },
-    // action to set the search query
-    setSearchQuery: (state, action: PayloadAction<string>) => {    
+    setSearchQuery: (state, action: PayloadAction<string>) => {
       state.query = action.payload;
-      console.log(state.query);
     },
     clearSearchQuery: (state) => {
       state.query = "";
@@ -92,6 +100,9 @@ export const {
   clearSearchQuery,
   setActiveFilters,
   clearActiveFilters,
+  setFilter,
+  patchActiveFilters
+
 } = searchSlice.actions;
 
 const searchReducer = searchSlice.reducer;

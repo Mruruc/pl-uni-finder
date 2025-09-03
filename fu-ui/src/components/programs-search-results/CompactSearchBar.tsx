@@ -7,6 +7,7 @@ interface CompactSearchBarProps {
   onSearchChange: (query: React.ChangeEvent<HTMLInputElement>) => void;
   onSearchSubmit: () => void;
   onSearchClear: () => void;
+  onSuggestionSelect: (term: string) => void;
 }
 
 const CompactSearchBar = ({
@@ -14,6 +15,7 @@ const CompactSearchBar = ({
   onSearchChange,
   onSearchSubmit,
   onSearchClear,
+  onSuggestionSelect
 }: CompactSearchBarProps) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -55,7 +57,7 @@ const CompactSearchBar = ({
           </button>
         )}
         {/* Search Suggestions Dropdown */}
-        {isSearchFocused && <SearchSuggestions onSelect={onSearchSubmit} />}
+        {isSearchFocused && <SearchSuggestions onSelect={onSuggestionSelect} />}
       </div>
     </div>
   );

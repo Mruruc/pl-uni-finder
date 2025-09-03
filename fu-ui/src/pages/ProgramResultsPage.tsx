@@ -1,79 +1,30 @@
-import { useEffect, useRef } from "react";
-import { useSearchParams } from "react-router";
-import CompactSearchBar from "../components/common/CompactSearchBar.tsx";
 import Header from "../components/common/Header.tsx";
 import LoadingState from "../components/common/LoadingState.tsx";
+import CompactSearchBar from "../components/programs-search-results/CompactSearchBar.tsx";
 import EmptyState from "../components/programs-search-results/EmptyState.tsx";
 import FiltersSidebar from "../components/programs-search-results/filters/FiltersSidebar.tsx";
 import LoadMoreSection from "../components/programs-search-results/LoadMoreSection.tsx";
 import ProgramList from "../components/programs-search-results/ProgramList.tsx";
 import ResultsHeader from "../components/programs-search-results/ResultsHeader.tsx";
-import {
-  clearSearchQuery,
-  setSearchQuery,
-} from "../features/search/searchSlice.ts";
-import { fetchProgramsThunk } from "../features/search/searchThunk.ts";
-import { useAppDispatch, useAppSelector } from "../hooks/hooks.ts";
-import useDebounce from "../hooks/useDebounce.ts";
+import { useVisibleCount, useVisiblePrograms } from "../hooks/hooks.ts";
+import useProgramsSearch from "../hooks/useProgramsSearch.ts";
 
 const ProgramsSearchResultsPage = () => {
-  const dispatch = useAppDispatch();
-  const { query, status, searchResults, resultCount, activeFilters } =
-    useAppSelector((state) => state.search);
+  const {
+    query,
+    urlSearch,
+    status,
+    searchResults,
+    resultCount,
+    handleChange,
+    handleSubmit,
+    handleClear,
+    handleSuggestionSelect,
+  } = useProgramsSearch();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const urlQ = (searchParams.get("q") || "").trim();
+  const programs = useVisiblePrograms();
+  const total = useVisibleCount();
 
-  const debouncedUrlQ = useDebounce(urlQ, 800);
-
-  useEffect(() => {
-    if (query !== urlQ) dispatch(setSearchQuery(urlQ));
-  }, [urlQ, query, dispatch]);
-
-  const lastKeyRef = useRef<string>("");
-  useEffect(() => {
-    if (!debouncedUrlQ) return;
-    const key = debouncedUrlQ;
-    if (key === lastKeyRef.current) return;
-    lastKeyRef.current = key;
-
-    dispatch(
-      fetchProgramsThunk({ query: debouncedUrlQ, filters: activeFilters })
-    );
-  }, [debouncedUrlQ, dispatch]);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const next = e.target.value;
-    const current = searchParams.get("q") || "";
-    if (next !== current) {
-      const sp = new URLSearchParams(searchParams);
-      if (next.trim()) sp.set("q", next);
-      else sp.delete("q");
-      setSearchParams(sp);
-    }
-    if (next !== query) dispatch(setSearchQuery(next));
-  };
-
-  const handleSearchClear = () => {
-    const sp = new URLSearchParams(searchParams);
-    sp.delete("q");
-    setSearchParams(sp);
-    dispatch(clearSearchQuery());
-  };
-
-  const handleSearchSubmit = () => {
-    const q = query.trim();
-    if (!q) return;
-    const current = searchParams.get("q") || "";
-    if (q !== current) setSearchParams({ q });
-  };
-
-  const handleClearSearch = (reset: boolean) => {
-    console.log(reset);
-
-    setSearchParams({ q: "" });
-    dispatch(clearSearchQuery());
-  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -81,9 +32,10 @@ const ProgramsSearchResultsPage = () => {
         centerSection={
           <CompactSearchBar
             searchQuery={query}
-            onSearchChange={handleSearchChange}
-            onSearchClear={handleSearchClear}
-            onSearchSubmit={handleSearchSubmit}
+            onSearchChange={handleChange}
+            onSearchSubmit={handleSubmit}
+            onSearchClear={() => handleClear()}
+            onSuggestionSelect={handleSuggestionSelect}
           />
         }
       />
@@ -94,7 +46,7 @@ const ProgramsSearchResultsPage = () => {
 
           <div className="lg:col-span-3">
             <ResultsHeader
-              query={query}
+              query={urlSearch}
               status={status}
               resultCount={resultCount}
             />
@@ -108,14 +60,14 @@ const ProgramsSearchResultsPage = () => {
               <>
                 {searchResults.length > 0 ? (
                   <>
-                    <ProgramList programs={searchResults} />
+                    <ProgramList programs={programs} />
                     <LoadMoreSection
-                      shownCount={searchResults.length}
-                      totalCount={resultCount}
+                      shownCount={total}
+                      totalCount={total}
                     />
                   </>
                 ) : (
-                  <EmptyState onClear={() => handleClearSearch(true)} />
+                  <EmptyState onClear={() => handleClear(true)} />
                 )}
               </>
             )}

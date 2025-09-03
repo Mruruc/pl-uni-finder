@@ -33,6 +33,7 @@ const TuitionRangeSlider = ({
         className="relative flex items-center select-none touch-none w-full h-5"
         value={value}
         onValueChange={(newValue) => onChange(newValue as [number, number])}
+        onValueCommit={(newValue) => onChange(newValue as [number, number])}
         max={max}
         step={step}
         minStepsBetweenThumbs={1}>

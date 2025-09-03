@@ -1,7 +1,8 @@
 import { Filter } from "lucide-react";
 import {
   clearActiveFilters,
-  setActiveFilters,
+  patchActiveFilters,
+  setFilter
 } from "../../../features/search/searchSlice.ts";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks.ts";
 import type { SearchFilters } from "../../../types/filter.types.ts";
@@ -13,20 +14,16 @@ const FiltersSidebar = () => {
   const dispatch = useAppDispatch();
   const activeFilters = useAppSelector((state) => state.search.activeFilters);
 
-  const handleFilterChange = (
-    filterName: keyof SearchFilters,
-    value: string
+  const handleFilterChange = <K extends keyof SearchFilters>(
+    key: K,
+    value: SearchFilters[K]
   ) => {
-    dispatch(setActiveFilters({ ...activeFilters, [filterName]: value }));
+    dispatch(setFilter({ key, value }));
   };
 
   const handleTuitionChange = (value: [number, number]) => {
     dispatch(
-      setActiveFilters({
-        ...activeFilters,
-        tuitionMin: value[0],
-        tuitionMax: value[1],
-      })
+      patchActiveFilters({ tuitionMin: value[0], tuitionMax: value[1] })
     );
   };
 
@@ -55,16 +52,18 @@ const FiltersSidebar = () => {
             title={filter.title}
             options={filter.options}
             value={`${activeFilters[filter.filterKey]}`}
-            onChange={(value) => handleFilterChange(filter.filterKey, value)}
+            onChange={(value) =>
+              handleFilterChange(
+                filter.filterKey as keyof SearchFilters,
+                value as any
+              )
+            }
           />
         ))}
 
         <TuitionRangeSlider
-          value={[
-            activeFilters.tuitionMin ?? 0,
-            activeFilters.tuitionMax ?? 10000,
-          ]}
-          max={10000}
+          value={[activeFilters.tuitionMin ?? 0, activeFilters.tuitionMax ?? 20_000]}
+          max={20_000}
           step={500}
           onChange={handleTuitionChange}
         />

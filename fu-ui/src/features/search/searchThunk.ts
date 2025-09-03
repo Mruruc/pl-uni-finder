@@ -1,11 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchProgramById, fetchPrograms } from "../../api/program-service";
-import type { SearchFilters } from "../../types/filter.types";
 import type { Program } from "../../types/program.types";
 
 interface SearchThunkParams {
   query: string;
-  filters: SearchFilters;
+  // filters: SearchFilters;
 }
 
 export const fetchProgramsThunk = createAsyncThunk<

@@ -14,12 +14,12 @@ const SearchBar = () => {
   const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     if (!searchQuery) return;
-    navigate(`${PROGRAMS_PATH}?q=${encodeURIComponent(searchQuery.trim())}`);
+    navigate(`${PROGRAMS_PATH}?search=${encodeURIComponent(searchQuery.trim())}`);
   };
 
   const handleSearchSuggestion = (suggestion: string) => {
     setSearchQuery(suggestion);
-    navigate(`${PROGRAMS_PATH}?q=${encodeURIComponent(suggestion.trim())}`);
+    navigate(`${PROGRAMS_PATH}?search=${encodeURIComponent(suggestion.trim())}`);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

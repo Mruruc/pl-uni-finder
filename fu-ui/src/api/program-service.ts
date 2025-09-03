@@ -18,10 +18,6 @@ export const fetchPrograms = async (
   page: number = 1,
   perPage: number = 10
 ): Promise<Program[]> => {
-  console.log(
-    `Fetching programs with query: ${query}, page: ${page}, perPage: ${perPage}`
-  );
-
   const params = new URLSearchParams();
   if (query?.trim()) params.append("query", query.trim());
   params.append("page", String(page));
@@ -32,8 +28,6 @@ export const fetchPrograms = async (
   const programs = (
     await httpGet<ProgramSearchResponse>(url, { timeoutMs: 20_000 }, retry)
   ).programs;
-  console.log(`Fetched programs: ${JSON.stringify(programs)}`);
-
   return programs;
 };
 
